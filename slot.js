@@ -1,12 +1,12 @@
 //create PIXI aliases
-let Application = PIXI.Application;
-let loader = PIXI.loader;
-let resources = PIXI.loader.resources;
-let Sprite = PIXI.Sprite;
-let Container = PIXI.Container;
+const { Application, loader, Sprite, Container, Texture } = PIXI;
+const resources = loader.resources;
+
+const APP_WIDTH = 770;
+const APP_HEIGHT = 600;
 
 //create PIXI app
-const app = new Application(770, 600, {
+const app = new Application(APP_WIDTH, APP_HEIGHT, {
   backgroundColor: 0x202020,
   transparent: true
 });
@@ -28,7 +28,8 @@ function setup() {
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
   const MARGIN = 20;
-  const textureID = PIXI.loader.resources["assets/images/images.json"].textures;
+  const SHOWN_REELS_HEIGHT = 470;
+  const textureID = resources["assets/images/images.json"].textures;
 
   //create reel structure
   const allReelsContainer = new Container();
@@ -60,6 +61,18 @@ function setup() {
     allReelsContainer.addChild(reelContainer);
   }
 
+  //build controlContainer
+  const controlContainer = new Container();
+  controlContainer.y = SHOWN_REELS_HEIGHT;
+
+  const controlBg = new Sprite(Texture.WHITE);
+  controlBg.width = APP_WIDTH;
+  controlBg.height = APP_WIDTH - SHOWN_REELS_HEIGHT;
+  controlBg.tint = 0x050505;
+
+  controlContainer.addChild(controlBg);
+
   //add all main container to stage
   app.stage.addChild(allReelsContainer);
+  app.stage.addChild(controlContainer);
 }

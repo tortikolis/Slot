@@ -7,4 +7,5 @@ body {
   padding: 200 0 0 0;
   background: url("./assets/images/background.png");
   background-size: cover;
+  background-position-x: center;
 }
