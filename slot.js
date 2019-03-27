@@ -30,6 +30,11 @@ function setup() {
   const MARGIN = 20;
   const SHOWN_REELS_HEIGHT = 470;
   const textureID = resources["assets/images/images.json"].textures;
+  const startBtnTexture = textureID["Replay_BTN.png"];
+  const display1Texture = textureID["balance_display.png"];
+  const display2Texture = textureID["bet_display.png"];
+  const plusTexture = textureID["Forward_BTN.png"];
+  const minusTexture = textureID["Backward_BTN.png"];
 
   //create reel structure
   const allReelsContainer = new Container();
@@ -67,10 +72,67 @@ function setup() {
 
   const controlBg = new Sprite(Texture.WHITE);
   controlBg.width = APP_WIDTH;
-  controlBg.height = APP_WIDTH - SHOWN_REELS_HEIGHT;
+  controlBg.height = APP_HEIGHT - SHOWN_REELS_HEIGHT;
   controlBg.tint = 0x050505;
 
+  const startBtn = new Sprite(startBtnTexture);
+  startBtn.x = APP_WIDTH - startBtn.width - MARGIN;
+  startBtn.y = controlBg.height - startBtn.height;
+
+  //display balance
+  const displayBalanceContainer = new Container();
+  const balanceDisplay = new Sprite(display1Texture);
+  const titleTextStyle = new PIXI.TextStyle({
+    fontFamily: "Verdana",
+    fontWeight: "bold",
+    fontSize: 14,
+    fill: 0xffffff
+  });
+  const displayTextStyle = new PIXI.TextStyle({
+    fontFamily: "Arial",
+    fontWeight: "bold",
+    fontSize: 64,
+    fill: 0xffffff
+  });
+
+  const balanceAmount = new PIXI.Text(100, displayTextStyle);
+
+  displayBalanceContainer.x =
+    APP_WIDTH - balanceDisplay.width - startBtn.width - 60;
+  displayBalanceContainer.y =
+    (controlBg.height - balanceDisplay.height - 30) / 2;
+  balanceDisplay.y = 20;
+  balanceAmount.y = 55;
+  balanceAmount.x = 50;
+
+  displayBalanceContainer.addChild(balanceDisplay);
+  displayBalanceContainer.addChild(balanceAmount);
+
+  //display bet amount
+  const displayBetContainer = new Container();
+  const betDisplay = new Sprite(display2Texture);
+  const minusBtn = new Sprite(minusTexture);
+  const plusBtn = new Sprite(plusTexture);
+  const betAmount = new PIXI.Text(1, displayTextStyle);
+
+  displayBetContainer.x = MARGIN;
+  displayBetContainer.y = (controlBg.height - betDisplay.height + 5) / 2;
+  betDisplay.x = 50;
+  minusBtn.y = 50;
+  plusBtn.x = betDisplay.width + plusBtn.width;
+  plusBtn.y = 50;
+  betAmount.y = 35;
+  betAmount.x = 105;
+
+  displayBetContainer.addChild(betDisplay);
+  displayBetContainer.addChild(minusBtn);
+  displayBetContainer.addChild(plusBtn);
+  displayBetContainer.addChild(betAmount);
+
   controlContainer.addChild(controlBg);
+  controlContainer.addChild(startBtn);
+  controlContainer.addChild(displayBalanceContainer);
+  controlContainer.addChild(displayBetContainer);
 
   //add all main container to stage
   app.stage.addChild(allReelsContainer);
