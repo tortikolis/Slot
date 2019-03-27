@@ -6,7 +6,7 @@ let Sprite = PIXI.Sprite;
 let Container = PIXI.Container;
 
 //create PIXI app
-const app = new Application(800, 600, {
+const app = new Application(770, 600, {
   backgroundColor: 0x202020,
   transparent: true
 });
@@ -27,6 +27,7 @@ function setup() {
   const REEL_COUNT = 5;
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
+  const MARGIN = 20;
   const textureID = PIXI.loader.resources["assets/images/images.json"].textures;
 
   //create reel structure
@@ -47,15 +48,15 @@ function setup() {
         const texture = textureID[randomSymbolIndex];
         const symbol = new Sprite(texture);
 
-        symbol.y = symbol.height * k;
+        symbol.y = (symbol.height + MARGIN) * k + MARGIN;
         reelCollectionContainer.addChild(symbol);
       }
 
-      reelCollectionContainer.y = reelCollectionContainer.height * j;
+      reelCollectionContainer.y = (reelCollectionContainer.height + MARGIN) * j;
       reelContainer.addChild(reelCollectionContainer);
     }
 
-    reelContainer.x = reelContainer.width * i;
+    reelContainer.x = (reelContainer.width + MARGIN) * i + MARGIN;
     allReelsContainer.addChild(reelContainer);
   }
 
