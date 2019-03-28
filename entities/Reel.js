@@ -5,7 +5,7 @@ const TWEEN_DURATION = 5000;
 class Reel {
   constructor(container, delay) {
     this.container = null;
-    this.reelImages = [];
+    this.reelColections = [];
     this.position = { pos: START_TWEEN_POSITION };
     this.previousPosition = null;
     this.tweenTo = { pos: END_TWEEN_POSITION };

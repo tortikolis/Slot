@@ -18,14 +18,19 @@ document.body.appendChild(app.view);
 //loads images
 loader.add("assets/images/images.json").load(setup);
 
+const SYMBOL_IDS = [
+  "chibuca.png",
+  "luke.png",
+  "storm.png",
+  "syth.png",
+  "yoda.png"
+];
+
+const allReels = [];
+let spinning = false;
+let spinNum = 0;
+
 function setup() {
-  const SYMBOL_IDS = [
-    "chibuca.png",
-    "luke.png",
-    "storm.png",
-    "syth.png",
-    "yoda.png"
-  ];
   const REEL_COUNT = 5;
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
@@ -44,6 +49,7 @@ function setup() {
   //build reels
   for (let i = 0; i < REEL_COUNT; i++) {
     const reelContainer = new Container();
+    const reel = new Reel(reelContainer, i * 100);
 
     //build reel symbol colections inside every reel
     for (let j = 0; j < REEL_COLLECTION_COUNT; j++) {
@@ -61,11 +67,13 @@ function setup() {
       }
 
       reelCollectionContainer.y = (reelCollectionContainer.height + MARGIN) * j;
+      reel.reelColections.push(reelCollectionContainer);
       reelContainer.addChild(reelCollectionContainer);
     }
 
     reelContainer.x = (reelContainer.width + MARGIN) * i + MARGIN;
     allReelsContainer.addChild(reelContainer);
+    allReels.push(reel);
   }
 
   //build controlContainer
@@ -80,16 +88,13 @@ function setup() {
   const startBtn = new Sprite(startBtnTexture);
   startBtn.x = APP_WIDTH - startBtn.width - MARGIN;
   startBtn.y = controlBg.height - startBtn.height;
+  startBtn.interactive = true;
+  startBtn.buttonMode = true;
 
   //display balance
   const displayBalanceContainer = new Container();
   const balanceDisplay = new Sprite(display1Texture);
-  const titleTextStyle = new PIXI.TextStyle({
-    fontFamily: "Verdana",
-    fontWeight: "bold",
-    fontSize: 14,
-    fill: 0xffffff
-  });
+
   const displayTextStyle = new PIXI.TextStyle({
     fontFamily: "Arial",
     fontWeight: "bold",
@@ -139,4 +144,31 @@ function setup() {
   //add all main container to stage
   app.stage.addChild(allReelsContainer);
   app.stage.addChild(controlContainer);
+
+  //add event listener to start button to start tweening
+  startBtn.addListener("pointerdown", () => {
+    if (spinning) return;
+    spinning = true;
+    console.log("spining...");
+    tweenReels(allReels);
+  });
+}
+
+function tweenReels(reels) {
+  console.log("tweening...");
+  reels.forEach((reel, i) => {
+    console.log(reel);
+    reel
+      .tween()
+      .start()
+      .onComplete(() => {
+        i === reels.length - 1 ? onSpinComplete() : null;
+      });
+    reel.tweenTo.pos += 10;
+  });
+}
+
+function onSpinComplete() {
+  spinning = false;
+  spinNum++;
 }
