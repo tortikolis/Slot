@@ -21,6 +21,7 @@ let spinning = false;
 let spinNum = 0;
 let bet = 1;
 let balance = 100;
+let balanceAmount;
 let data;
 let paySound;
 let stopSound;
@@ -128,7 +129,7 @@ function setup() {
     fill: 0xffffff
   });
 
-  const balanceAmount = new PIXI.Text(balance, displayTextStyle);
+  balanceAmount = new PIXI.Text(balance, displayTextStyle);
 
   displayBalanceContainer.x =
     APP_WIDTH - balanceDisplay.width - startBtn.width - 60;
@@ -188,14 +189,13 @@ function setup() {
 
   minusBtn.addListener("pointerdown", () => {
     if (bet <= 1) return;
-    bet -= 1;
+    bet--;
     betAmount.text = bet;
   });
 
   plusBtn.addListener("pointerdown", () => {
-    console.log("bet");
     if (bet > balance) return;
-    bet += 1;
+    bet++;
     betAmount.text = bet;
   });
 
@@ -227,7 +227,6 @@ function updateReelPositions() {
         roundedTweenPosition !== roundedPrevTweenPos &&
         (roundedTweenPosition + j) % 2 === 0
       ) {
-        console.log("swap", j, roundedTweenPosition);
         const collectionSymbols = reelCollection.children;
         //check if its last spin and set predifined textures else set random ones
         if (roundedTweenPosition + 1 === tweenToPosition) {
@@ -271,8 +270,13 @@ function tweenReels(reels) {
 }
 
 function onSpinComplete() {
-  console.log("spin complete");
   spinning = false;
-  spinNum++;
   paySound.play();
+  updateBalanceAmount();
+  spinNum++;
+}
+
+function updateBalanceAmount() {
+  balance += data.spins[spinNum].winAmount * bet;
+  balanceAmount.text = balance;
 }
