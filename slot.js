@@ -19,6 +19,8 @@ let textureIDs;
 const allReels = [];
 let spinning = false;
 let spinNum = 0;
+let bet = 1;
+let balance = 100;
 let data;
 let paySound;
 let stopSound;
@@ -126,7 +128,7 @@ function setup() {
     fill: 0xffffff
   });
 
-  const balanceAmount = new PIXI.Text(100, displayTextStyle);
+  const balanceAmount = new PIXI.Text(balance, displayTextStyle);
 
   displayBalanceContainer.x =
     APP_WIDTH - balanceDisplay.width - startBtn.width - 60;
@@ -144,7 +146,12 @@ function setup() {
   const betDisplay = new Sprite(display2Texture);
   const minusBtn = new Sprite(minusTexture);
   const plusBtn = new Sprite(plusTexture);
-  const betAmount = new PIXI.Text(1, displayTextStyle);
+  const betAmount = new PIXI.Text(bet, displayTextStyle);
+
+  minusBtn.interactive = true;
+  minusBtn.buttonMode = true;
+  plusBtn.interactive = true;
+  plusBtn.buttonMode = true;
 
   displayBetContainer.x = MARGIN;
   displayBetContainer.y = (controlBg.height - betDisplay.height + 5) / 2;
@@ -169,15 +176,30 @@ function setup() {
   app.stage.addChild(allReelsContainer);
   app.stage.addChild(controlContainer);
 
-  //add event listener to start button to start tweening
+  //add event listeners to buttons
   startBtn.addListener("pointerdown", () => {
     if (spinning) return;
     spinning = true;
+
+    balance -= bet;
+    balanceAmount.text = balance;
     tweenReels(allReels);
   });
 
+  minusBtn.addListener("pointerdown", () => {
+    if (bet <= 1) return;
+    bet -= 1;
+    betAmount.text = bet;
+  });
+
+  plusBtn.addListener("pointerdown", () => {
+    console.log("bet");
+    if (bet > balance) return;
+    bet += 1;
+    betAmount.text = bet;
+  });
+
   app.ticker.add(delta => gameLoop(delta));
-  //setup function end
 }
 
 function gameLoop(delta) {
