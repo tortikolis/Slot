@@ -18,7 +18,7 @@ class Reel {
     return (
       new TWEEN.Tween(this.position)
         .to(this.tweenTo, TWEEN_DURATION)
-        .easing(TWEEN.Easing.Quintic.InOut)
+        .easing(TWEEN.Easing.Quadratic.InOut)
         //.easing(TWEEN.Easing.Bounce.Out)
         .delay(this.delay)
     );

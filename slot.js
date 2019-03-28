@@ -20,6 +20,9 @@ const allReels = [];
 let spinning = false;
 let spinNum = 0;
 let data;
+let paySound;
+let stopSound;
+let startSound;
 
 //fetching data from data.json (probably data seved by server)
 fetch("./data/data.json")
@@ -29,6 +32,19 @@ fetch("./data/data.json")
     //loads resources and starts setup
     loader.add("assets/images/images.json").load(setup);
   });
+
+sounds.load([
+  "assets/sounds/pay.wav",
+  "assets/sounds/blaster-firing.wav",
+  "assets/sounds/lightsaber.mp3"
+]);
+sounds.whenLoaded = soundSetup;
+
+function soundSetup() {
+  paySound = sounds["assets/sounds/pay.wav"];
+  stopSound = sounds["assets/sounds/blaster-firing.wav"];
+  startSound = sounds["assets/sounds/lightsaber.mp3"];
+}
 
 //create PIXI app
 const app = new Application(APP_WIDTH, APP_HEIGHT, {
@@ -57,7 +73,7 @@ function setup() {
   //build reels
   for (let i = 0; i < REEL_COUNT; i++) {
     const reelContainer = new Container();
-    const reel = new Reel(reelContainer, i * 100);
+    const reel = new Reel(reelContainer, i * 200);
 
     //build reel symbol colections inside every reel
     for (let j = 0; j < REEL_COLLECTION_COUNT; j++) {
@@ -221,7 +237,11 @@ function tweenReels(reels) {
     reel
       .tween()
       .start()
+      .onStart(() => {
+        startSound.play();
+      })
       .onComplete(() => {
+        stopSound.play();
         i === reels.length - 1 ? onSpinComplete() : null;
       });
     reel.tweenTo.pos += 20;
@@ -229,6 +249,8 @@ function tweenReels(reels) {
 }
 
 function onSpinComplete() {
+  console.log("spin complete");
   spinning = false;
   spinNum++;
+  paySound.play();
 }
