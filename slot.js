@@ -6,6 +6,7 @@ const resources = loader.resources;
 
 const APP_WIDTH = 770;
 const APP_HEIGHT = 600;
+const SHOWN_REELS_HEIGHT = 470;
 
 //create PIXI app
 const app = new Application(APP_WIDTH, APP_HEIGHT, {
@@ -35,7 +36,6 @@ function setup() {
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
   const MARGIN = 20;
-  const SHOWN_REELS_HEIGHT = 470;
   const textureID = resources["assets/images/images.json"].textures;
   const startBtnTexture = textureID["Replay_BTN.png"];
   const display1Texture = textureID["balance_display.png"];
@@ -67,7 +67,7 @@ function setup() {
       }
 
       reelCollectionContainer.y = (reelCollectionContainer.height + MARGIN) * j;
-      reel.reelColections.push(reelCollectionContainer);
+      reel.reelCollections.push(reelCollectionContainer);
       reelContainer.addChild(reelCollectionContainer);
     }
 
@@ -149,15 +149,36 @@ function setup() {
   startBtn.addListener("pointerdown", () => {
     if (spinning) return;
     spinning = true;
-    console.log("spining...");
     tweenReels(allReels);
+  });
+
+  app.ticker.add(delta => gameLoop(delta));
+  //setup function end
+}
+
+function gameLoop(delta) {
+  updateReelPositions();
+  TWEEN.update();
+}
+
+function updateReelPositions() {
+  allReels.forEach(reel => {
+    const { reelCollections } = reel;
+
+    for (let i = 1; i <= reelCollections.length; i++) {
+      const reelCollection = reelCollections[i - 1];
+      const tweenPosition = reel.position.pos;
+
+      //sets position of every colection
+      reelCollection.y =
+        ((tweenPosition + i) % 2) * SHOWN_REELS_HEIGHT - SHOWN_REELS_HEIGHT;
+    }
   });
 }
 
+//activates tweening for all reels
 function tweenReels(reels) {
-  console.log("tweening...");
   reels.forEach((reel, i) => {
-    console.log(reel);
     reel
       .tween()
       .start()
