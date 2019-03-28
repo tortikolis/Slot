@@ -1,3 +1,5 @@
+import Reel from "./entities/Reel.js";
+
 //create PIXI aliases
 const { Application, loader, Sprite, Container, Texture } = PIXI;
 const resources = loader.resources;
