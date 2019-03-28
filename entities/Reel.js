@@ -1,5 +1,5 @@
 const START_TWEEN_POSITION = 0;
-const END_TWEEN_POSITION = 10;
+const END_TWEEN_POSITION = 20;
 const TWEEN_DURATION = 5000;
 
 class Reel {
@@ -15,11 +15,13 @@ class Reel {
   }
 
   tween() {
-    return new TWEEN.Tween(this.position)
-      .to(this.tweenTo, TWEEN_DURATION)
-      .easing(TWEEN.Easing.Sinusoidal.In)
-      .easing(TWEEN.Easing.Bounce.Out)
-      .delay(this.delay);
+    return (
+      new TWEEN.Tween(this.position)
+        .to(this.tweenTo, TWEEN_DURATION)
+        .easing(TWEEN.Easing.Quintic.InOut)
+        //.easing(TWEEN.Easing.Bounce.Out)
+        .delay(this.delay)
+    );
   }
 }
 

@@ -7,6 +7,28 @@ const resources = loader.resources;
 const APP_WIDTH = 770;
 const APP_HEIGHT = 600;
 const SHOWN_REELS_HEIGHT = 470;
+const SYMBOL_IDS = [
+  "chibuca.png",
+  "luke.png",
+  "storm.png",
+  "syth.png",
+  "yoda.png"
+];
+let textureIDs;
+
+const allReels = [];
+let spinning = false;
+let spinNum = 0;
+let data;
+
+//fetching data from data.json (probably data seved by server)
+fetch("./data/data.json")
+  .then(res => res.json())
+  .then(res => {
+    data = res;
+    //loads resources and starts setup
+    loader.add("assets/images/images.json").load(setup);
+  });
 
 //create PIXI app
 const app = new Application(APP_WIDTH, APP_HEIGHT, {
@@ -16,32 +38,18 @@ const app = new Application(APP_WIDTH, APP_HEIGHT, {
 //appends it to HTML
 document.body.appendChild(app.view);
 
-//loads images
-loader.add("assets/images/images.json").load(setup);
-
-const SYMBOL_IDS = [
-  "chibuca.png",
-  "luke.png",
-  "storm.png",
-  "syth.png",
-  "yoda.png"
-];
-
-const allReels = [];
-let spinning = false;
-let spinNum = 0;
-
 function setup() {
+  console.log(data);
+  textureIDs = resources["assets/images/images.json"].textures;
   const REEL_COUNT = 5;
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
   const MARGIN = 20;
-  const textureID = resources["assets/images/images.json"].textures;
-  const startBtnTexture = textureID["Replay_BTN.png"];
-  const display1Texture = textureID["balance_display.png"];
-  const display2Texture = textureID["bet_display.png"];
-  const plusTexture = textureID["Forward_BTN.png"];
-  const minusTexture = textureID["Backward_BTN.png"];
+  const startBtnTexture = textureIDs["Replay_BTN.png"];
+  const display1Texture = textureIDs["balance_display.png"];
+  const display2Texture = textureIDs["bet_display.png"];
+  const plusTexture = textureIDs["Forward_BTN.png"];
+  const minusTexture = textureIDs["Backward_BTN.png"];
 
   //create reel structure
   const allReelsContainer = new Container();
@@ -59,7 +67,7 @@ function setup() {
       for (let k = 0; k < SYMBOLS_IN_COLLECTION_COUNT; k++) {
         const randomSymbolIndex =
           SYMBOL_IDS[Math.floor(Math.random() * SYMBOL_IDS.length)];
-        const texture = textureID[randomSymbolIndex];
+        const texture = textureIDs[randomSymbolIndex];
         const symbol = new Sprite(texture);
 
         symbol.y = (symbol.height + MARGIN) * k + MARGIN;
@@ -162,17 +170,48 @@ function gameLoop(delta) {
 }
 
 function updateReelPositions() {
-  allReels.forEach(reel => {
+  allReels.forEach((reel, i) => {
     const { reelCollections } = reel;
 
-    for (let i = 1; i <= reelCollections.length; i++) {
-      const reelCollection = reelCollections[i - 1];
+    for (let j = 1; j <= reelCollections.length; j++) {
+      const reelCollection = reelCollections[j - 1];
       const tweenPosition = reel.position.pos;
+      const tweenToPosition = reel.tweenTo.pos;
+      const roundedTweenPosition = Math.floor(tweenPosition);
+      const roundedPrevTweenPos = Math.floor(reel.previousPosition);
 
-      //sets position of every colection
+      //sets position of every collection on screen, if it goes out of screen set it on top
       reelCollection.y =
-        ((tweenPosition + i) % 2) * SHOWN_REELS_HEIGHT - SHOWN_REELS_HEIGHT;
+        ((tweenPosition + j) % 2) * SHOWN_REELS_HEIGHT - SHOWN_REELS_HEIGHT;
+
+      //detect if collection has gone outside of view and swap
+      if (
+        roundedTweenPosition !== roundedPrevTweenPos &&
+        (roundedTweenPosition + j) % 2 === 0
+      ) {
+        console.log("swap", j, roundedTweenPosition);
+        const collectionSymbols = reelCollection.children;
+        //check if its last spin and set predifined textures else set random ones
+        if (roundedTweenPosition + 1 === tweenToPosition) {
+          const predefinedReelImageData = data.spins[spinNum].wheelSymbols[i];
+          swapTextures(collectionSymbols, predefinedReelImageData);
+        } else {
+          swapTextures(collectionSymbols);
+        }
+      }
+
+      reel.previousPosition = tweenPosition;
     }
+  });
+}
+
+function swapTextures(symbols, predifinedSymbolData) {
+  symbols.forEach((symbol, i) => {
+    const randomId = Math.floor(Math.random() * SYMBOL_IDS.length);
+    let id = predifinedSymbolData ? predifinedSymbolData[i] : randomId;
+    const texture = textureIDs[SYMBOL_IDS[id]];
+
+    symbol.texture = texture;
   });
 }
 
@@ -185,7 +224,7 @@ function tweenReels(reels) {
       .onComplete(() => {
         i === reels.length - 1 ? onSpinComplete() : null;
       });
-    reel.tweenTo.pos += 10;
+    reel.tweenTo.pos += 20;
   });
 }
 
