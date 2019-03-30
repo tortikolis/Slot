@@ -40,7 +40,6 @@ let highlightedSymbols = [];
 const tweenObj = { scale: 1 };
 const symbolTween = new TWEEN.Tween(tweenObj).to({ scale: 1.1 }, 1000);
 const glowFilter = new filters.GlowFilter(15, 5, 1, 0xff0000, 0.5);
-//const blur = new PIXI.filters.BlurFilter();
 
 //fetching data from data.json (probably data seved by server)
 fetch("./data/data.json")
@@ -119,7 +118,7 @@ function setup() {
     allReelsContainer.addChild(reelContainer);
     allReels.push(reel);
   }
-  console.log(allReelsContainer);
+
   //build controlContainer
   const controlContainer = new Container();
   controlContainer.y = SHOWN_REELS_HEIGHT;
@@ -225,12 +224,14 @@ function setup() {
 
   minusBtn.addListener("pointerdown", () => {
     if (bet <= 1) return;
+    if (spinning) return;
     bet--;
     betAmountDisplay.text = bet;
   });
 
   plusBtn.addListener("pointerdown", () => {
     if (bet >= balance) return;
+    if (spinning) return;
     bet++;
     betAmountDisplay.text = bet;
   });
