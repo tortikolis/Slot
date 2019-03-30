@@ -30,8 +30,8 @@ let spinning = false;
 let spinNum = -1;
 let bet = 1;
 let balance = 100;
-let balanceAmount;
-let winAmount;
+let balanceAmountDisplay;
+let winAmountDisplay;
 let data;
 let paySound;
 let stopSound;
@@ -146,38 +146,38 @@ function setup() {
     fill: 0xffffff
   });
 
-  balanceAmount = new Text(balance, displayTextStyle);
+  balanceAmountDisplay = new Text(balance, displayTextStyle);
 
   displayBalanceContainer.x =
     APP_WIDTH - balanceDisplay.width - startBtn.width - 60;
   displayBalanceContainer.y =
     (controlBg.height - balanceDisplay.height - 30) / 2;
   balanceDisplay.y = 20;
-  balanceAmount.y = 45;
-  balanceAmount.x = 40;
+  balanceAmountDisplay.y = 45;
+  balanceAmountDisplay.x = 40;
 
   displayBalanceContainer.addChild(balanceDisplay);
-  displayBalanceContainer.addChild(balanceAmount);
+  displayBalanceContainer.addChild(balanceAmountDisplay);
 
   //display win amount
   const displayWinContainer = new Container();
   const winDisplay = new Sprite(display3Texture);
-  winAmount = new Text("", displayTextStyle);
+  winAmountDisplay = new Text("", displayTextStyle);
 
   displayWinContainer.x = 210;
   displayWinContainer.y = 34;
-  winAmount.x = 30;
-  winAmount.y = 25;
+  winAmountDisplay.x = 30;
+  winAmountDisplay.y = 25;
 
   displayWinContainer.addChild(winDisplay);
-  displayWinContainer.addChild(winAmount);
+  displayWinContainer.addChild(winAmountDisplay);
 
   //display bet amount
   const displayBetContainer = new Container();
   const betDisplay = new Sprite(display2Texture);
   const minusBtn = new Sprite(minusTexture);
   const plusBtn = new Sprite(plusTexture);
-  const betAmount = new Text(bet, displayTextStyle);
+  const betAmountDisplay = new Text(bet, displayTextStyle);
 
   minusBtn.interactive = true;
   minusBtn.buttonMode = true;
@@ -190,13 +190,13 @@ function setup() {
   minusBtn.x = 25;
   plusBtn.x = 140;
   plusBtn.y = 30;
-  betAmount.y = 25;
-  betAmount.x = 75;
+  betAmountDisplay.y = 25;
+  betAmountDisplay.x = 75;
 
   displayBetContainer.addChild(betDisplay);
   displayBetContainer.addChild(minusBtn);
   displayBetContainer.addChild(plusBtn);
-  displayBetContainer.addChild(betAmount);
+  displayBetContainer.addChild(betAmountDisplay);
 
   controlContainer.addChild(controlBg);
   controlContainer.addChild(startBtn);
@@ -215,9 +215,9 @@ function setup() {
 
     spinning = true;
     spinNum++;
-    winAmount.text = "";
+    winAmountDisplay.text = "";
     balance -= bet;
-    balanceAmount.text = balance;
+    balanceAmountDisplay.text = balance;
 
     highlightedSymbols.forEach(symbol => (symbol.filters = []));
     tweenReels(allReels);
@@ -226,13 +226,13 @@ function setup() {
   minusBtn.addListener("pointerdown", () => {
     if (bet <= 1) return;
     bet--;
-    betAmount.text = bet;
+    betAmountDisplay.text = bet;
   });
 
   plusBtn.addListener("pointerdown", () => {
     if (bet >= balance) return;
     bet++;
-    betAmount.text = bet;
+    betAmountDisplay.text = bet;
   });
 
   app.ticker.add(delta => gameLoop(delta));
@@ -311,8 +311,10 @@ function tweenReels(reels) {
 }
 
 function onSpinComplete() {
+  const winAmount = data.spins[spinNum].winAmount;
+
   spinning = false;
-  paySound.play();
+  if (winAmount > 0) paySound.play();
   updateWinAmount();
   updateBalanceAmount();
   symbolTween
@@ -327,7 +329,9 @@ function onSpinComplete() {
 function animateWinningSymbols() {
   if (spinNum < 0) return;
   if (spinning) return;
+
   const tweenScale = tweenObj.scale;
+
   highlightedSymbols = [];
   allReels.forEach((reel, i) => {
     reel.reelCollections[0].children.forEach((symbol, j) => {
@@ -343,9 +347,9 @@ function animateWinningSymbols() {
 
 function updateBalanceAmount() {
   balance += data.spins[spinNum].winAmount * bet;
-  balanceAmount.text = balance;
+  balanceAmountDisplay.text = balance;
 }
 
 function updateWinAmount() {
-  winAmount.text = data.spins[spinNum].winAmount * bet;
+  winAmountDisplay.text = data.spins[spinNum].winAmount * bet;
 }
