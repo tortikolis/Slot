@@ -1,16 +1,154 @@
 {
   "spins": [
     {
-      "wheelSymbols": [[2, 2, 2], [2, 2, 2], [1, 1, 1], [1, 1, 1], [1, 1, 1]],
+      "wheelSymbols": [
+        [
+          { "id": 1, "isWining": false },
+          { "id": 2, "isWining": true },
+          { "id": 1, "isWining": false }
+        ],
+        [
+          { "id": 4, "isWining": false },
+          { "id": 2, "isWining": true },
+          { "id": 1, "isWining": false }
+        ],
+        [
+          { "id": 3, "isWining": false },
+          { "id": 2, "isWining": true },
+          { "id": 3, "isWining": false }
+        ],
+        [
+          { "id": 3, "isWining": false },
+          { "id": 3, "isWining": false },
+          { "id": 3, "isWining": false }
+        ],
+        [
+          { "id": 4, "isWining": false },
+          { "id": 3, "isWining": false },
+          { "id": 2, "isWining": false }
+        ]
+      ],
       "winAmount": 1
     },
     {
-      "wheelSymbols": [[2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2]],
-      "winAmount": 2
+      "wheelSymbols": [
+        [
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true }
+        ],
+        [
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true }
+        ],
+        [
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true }
+        ],
+        [
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true }
+        ],
+        [
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true },
+          { "id": 3, "isWining": true }
+        ]
+      ],
+      "winAmount": 100
     },
     {
-      "wheelSymbols": [[3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]],
-      "winAmount": 3
+      "wheelSymbols": [
+        [
+          { "id": 0, "isWining": true },
+          { "id": 2, "isWining": false },
+          { "id": 3, "isWining": false }
+        ],
+        [
+          { "id": 0, "isWining": true },
+          { "id": 4, "isWining": false },
+          { "id": 4, "isWining": false }
+        ],
+        [
+          { "id": 0, "isWining": true },
+          { "id": 2, "isWining": false },
+          { "id": 0, "isWining": false }
+        ],
+        [
+          { "id": 0, "isWining": true },
+          { "id": 3, "isWining": false },
+          { "id": 2, "isWining": false }
+        ],
+        [
+          { "id": 0, "isWining": true },
+          { "id": 2, "isWining": false },
+          { "id": 3, "isWining": false }
+        ]
+      ],
+      "winAmount": 10
+    },
+    {
+      "wheelSymbols": [
+        [
+          { "id": 0, "isWining": false },
+          { "id": 0, "isWining": false },
+          { "id": 0, "isWining": false }
+        ],
+        [
+          { "id": 1, "isWining": false },
+          { "id": 1, "isWining": false },
+          { "id": 1, "isWining": false }
+        ],
+        [
+          { "id": 2, "isWining": false },
+          { "id": 2, "isWining": false },
+          { "id": 2, "isWining": false }
+        ],
+        [
+          { "id": 3, "isWining": false },
+          { "id": 3, "isWining": false },
+          { "id": 3, "isWining": false }
+        ],
+        [
+          { "id": 4, "isWining": false },
+          { "id": 4, "isWining": false },
+          { "id": 4, "isWining": false }
+        ]
+      ],
+      "winAmount": 0
+    },
+    {
+      "wheelSymbols": [
+        [
+          { "id": 1, "isWining": false },
+          { "id": 2, "isWining": false },
+          { "id": 4, "isWining": true }
+        ],
+        [
+          { "id": 2, "isWining": false },
+          { "id": 2, "isWining": false },
+          { "id": 4, "isWining": true }
+        ],
+        [
+          { "id": 3, "isWining": false },
+          { "id": 3, "isWining": false },
+          { "id": 4, "isWining": true }
+        ],
+        [
+          { "id": 0, "isWining": false },
+          { "id": 1, "isWining": false },
+          { "id": 4, "isWining": true }
+        ],
+        [
+          { "id": 2, "isWining": false },
+          { "id": 2, "isWining": false },
+          { "id": 2, "isWining": false }
+        ]
+      ],
+      "winAmount": 5
     }
   ]
 }

@@ -12,6 +12,7 @@ class Reel {
     this.delay = delay;
     this.sameAsLastFrame = this.position.pos === this.previousPosition;
     this.stopChange = false;
+    this.blur = new PIXI.filters.BlurFilter();
   }
 
   tween() {
