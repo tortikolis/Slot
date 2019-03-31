@@ -78,6 +78,8 @@ function setup() {
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
   const MARGIN = 20;
   const startBtnTexture = textureIDs["Replay_BTN.png"];
+  const startBtnTexture2 = textureIDs["Replay_BTN.png2"];
+  const startBtnTexture3 = textureIDs["Replay_BTN.png3"];
   const display1Texture = textureIDs["balance_display.png"];
   const display2Texture = textureIDs["bet_display.png"];
   const display3Texture = textureIDs["win_display.png"];
