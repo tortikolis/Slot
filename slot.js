@@ -36,7 +36,6 @@ let data;
 let paySound;
 let stopSound;
 let startSound;
-let highlightedSymbols = [];
 const tweenObj = { scale: 1 };
 let startBtnTexture;
 let startBtnTextureDown;
@@ -320,14 +319,22 @@ function animateWinningSymbols() {
 
   const tweenScale = tweenObj.scale;
 
-  highlightedSymbols = [];
   allReels.forEach((reel, i) => {
     reel.reelCollections[0].children.forEach((symbol, j) => {
       if (data.spins[spinNum].wheelSymbols[i][j].isWining) {
         symbol.scale.x = tweenScale;
         symbol.scale.y = tweenScale;
         symbol.filters = [glowFilter];
-        highlightedSymbols.push(symbol);
+      }
+    });
+  });
+}
+
+function removeSymbolHighlight() {
+  allReels.forEach(reel => {
+    reel.reelCollections[0].children.forEach(symbol => {
+      if (symbol.filters && symbol.filters.length > 0) {
+        symbol.filters = [];
       }
     });
   });
@@ -356,7 +363,7 @@ function onStartBtnDown() {
   balance -= bet;
   balanceAmountDisplay.text = balance;
 
-  highlightedSymbols.forEach(symbol => (symbol.filters = []));
+  removeSymbolHighlight();
   tweenReels(allReels);
 }
 
