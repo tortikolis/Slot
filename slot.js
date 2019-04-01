@@ -38,10 +38,13 @@ let stopSound;
 let startSound;
 let highlightedSymbols = [];
 const tweenObj = { scale: 1 };
+let startBtnTexture;
+let startBtnTextureDown;
+let startBtnTextureOver;
 const symbolTween = new TWEEN.Tween(tweenObj).to({ scale: 1.1 }, 1000);
 const glowFilter = new filters.GlowFilter(15, 5, 1, 0xff0000, 0.5);
 
-//fetching data from data.json (probably data seved by server)
+//fetching data from data.json (probably data served by server)
 fetch("./data/data.json")
   .then(res => res.json())
   .then(res => {
@@ -77,14 +80,14 @@ function setup() {
   const REEL_COLLECTION_COUNT = 2;
   const SYMBOLS_IN_COLLECTION_COUNT = 3;
   const MARGIN = 20;
-  const startBtnTexture = textureIDs["Replay_BTN.png"];
-  const startBtnTexture2 = textureIDs["Replay_BTN.png2"];
-  const startBtnTexture3 = textureIDs["Replay_BTN.png3"];
   const display1Texture = textureIDs["balance_display.png"];
   const display2Texture = textureIDs["bet_display.png"];
   const display3Texture = textureIDs["win_display.png"];
-  const plusTexture = textureIDs["Forward_BTN.png"];
-  const minusTexture = textureIDs["Backward_BTN.png"];
+  const plusBtnTexture = textureIDs["Forward_BTN.png"];
+  const minusBtnTexture = textureIDs["Backward_BTN.png"];
+  startBtnTexture = textureIDs["Replay_BTN.png"];
+  startBtnTextureOver = textureIDs["Replay_BTN2.png"];
+  startBtnTextureDown = textureIDs["Replay_BTN3.png"];
 
   //create reel structure
   const allReelsContainer = new Container();
@@ -176,8 +179,8 @@ function setup() {
   //display bet amount
   const displayBetContainer = new Container();
   const betDisplay = new Sprite(display2Texture);
-  const minusBtn = new Sprite(minusTexture);
-  const plusBtn = new Sprite(plusTexture);
+  const minusBtn = new Sprite(minusBtnTexture);
+  const plusBtn = new Sprite(plusBtnTexture);
   const betAmountDisplay = new Text(bet, displayTextStyle);
 
   minusBtn.interactive = true;
@@ -210,34 +213,16 @@ function setup() {
   app.stage.addChild(controlContainer);
 
   //add event listeners to buttons
-  startBtn.addListener("pointerdown", () => {
-    if (spinning) return;
-    if (bet > balance) return;
+  startBtn
+    .on("pointerdown", onStartBtnDown)
+    .on("pointerup", onStartButtonUp)
+    .on("pointerupoutside", onStartButtonUp)
+    .on("pointerover", onStartButtonOver)
+    .on("pointerout", onStartButtonOut);
+  minusBtn.on("pointerdown", onMinusBtnDown);
+  plusBtn.on("pointerdown", onPlusBtnDown);
 
-    spinning = true;
-    spinNum++;
-    winAmountDisplay.text = "";
-    balance -= bet;
-    balanceAmountDisplay.text = balance;
-
-    highlightedSymbols.forEach(symbol => (symbol.filters = []));
-    tweenReels(allReels);
-  });
-
-  minusBtn.addListener("pointerdown", () => {
-    if (bet <= 1) return;
-    if (spinning) return;
-    bet--;
-    betAmountDisplay.text = bet;
-  });
-
-  plusBtn.addListener("pointerdown", () => {
-    if (bet >= balance) return;
-    if (spinning) return;
-    bet++;
-    betAmountDisplay.text = bet;
-  });
-
+  //60fps ticker
   app.ticker.add(delta => gameLoop(delta));
 }
 
@@ -355,4 +340,63 @@ function updateBalanceAmount() {
 
 function updateWinAmount() {
   winAmountDisplay.text = data.spins[spinNum].winAmount * bet;
+}
+
+function onStartBtnDown() {
+  if (spinning) return;
+  if (bet > balance) return;
+
+  this.isdown = true;
+  this.texture = startBtnTextureDown;
+  this.alpha = 1;
+
+  spinning = true;
+  spinNum++;
+  winAmountDisplay.text = "";
+  balance -= bet;
+  balanceAmountDisplay.text = balance;
+
+  highlightedSymbols.forEach(symbol => (symbol.filters = []));
+  tweenReels(allReels);
+}
+
+function onMinusBtnDown() {
+  if (bet <= 1) return;
+  if (spinning) return;
+
+  bet--;
+  betAmountDisplay.text = bet;
+}
+
+function onPlusBtnDown() {
+  if (bet >= balance) return;
+  if (spinning) return;
+
+  bet++;
+  betAmountDisplay.text = bet;
+}
+
+function onStartButtonUp() {
+  this.isdown = false;
+  if (this.isOver) {
+    this.texture = startBtnTextureOver;
+  } else {
+    this.texture = startBtnTexture;
+  }
+}
+
+function onStartButtonOver() {
+  this.isOver = true;
+  if (this.isdown) {
+    return;
+  }
+  this.texture = startBtnTextureOver;
+}
+
+function onStartButtonOut() {
+  this.isOver = false;
+  if (this.isdown) {
+    return;
+  }
+  this.texture = startBtnTexture;
 }
