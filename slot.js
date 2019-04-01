@@ -30,18 +30,21 @@ let spinning = false;
 let spinNum = -1;
 let bet = 1;
 let balance = 100;
+let data;
+
+const tweenObj = { scale: 1 };
+const symbolTween = new TWEEN.Tween(tweenObj).to({ scale: 1.1 }, 1000);
+const glowFilter = new filters.GlowFilter(15, 5, 1, 0xff0000, 0.5);
+
 let balanceAmountDisplay;
 let winAmountDisplay;
-let data;
 let paySound;
 let stopSound;
 let startSound;
-const tweenObj = { scale: 1 };
 let startBtnTexture;
 let startBtnTextureDown;
 let startBtnTextureOver;
-const symbolTween = new TWEEN.Tween(tweenObj).to({ scale: 1.1 }, 1000);
-const glowFilter = new filters.GlowFilter(15, 5, 1, 0xff0000, 0.5);
+let betAmountDisplay;
 
 //fetching data from data.json (probably data served by server)
 fetch("./data/data.json")
@@ -180,7 +183,7 @@ function setup() {
   const betDisplay = new Sprite(display2Texture);
   const minusBtn = new Sprite(minusBtnTexture);
   const plusBtn = new Sprite(plusBtnTexture);
-  const betAmountDisplay = new Text(bet, displayTextStyle);
+  betAmountDisplay = new Text(bet, displayTextStyle);
 
   minusBtn.interactive = true;
   minusBtn.buttonMode = true;
